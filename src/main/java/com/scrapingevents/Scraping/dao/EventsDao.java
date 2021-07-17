@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Entity;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -17,22 +19,36 @@ public class EventsDao {
     @Autowired
     private SessionFactory factory;
 
-    public Session getSession() {
-        Session session = factory.getCurrentSession();
-        if (session == null) {
-            session = factory.openSession();
-        }
-
-        return session;
-    }
-
     public void saveEvent(Events event) {
-        getSession().save(event);
+
+        Session session = factory.openSession();
+
+        session.save(event);
+        session.close();
     }
+
+    public void saveEventList(List<Events> event) {
+        Session session = factory.openSession();
+
+        for(int i=0;i<event.size();i++){
+            session.save(event.get(i));
+            if(i%20==0) {
+                session.clear();
+            }
+        }
+        session.close();
+    }
+
 
     @SuppressWarnings("deprecation")
     public List<Events> getEvents() {
-        return getSession().createCriteria(Events.class).list();
+        Session session = factory.openSession();
+        List<Events> response = session.createCriteria(Events.class).list();
+        session.close();
+        return response;
     }
+
+
+
 
 }

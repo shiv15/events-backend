@@ -1,21 +1,30 @@
 package com.scrapingevents.Scraping.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+
 public class Events {
     @Id
-    @GeneratedValue
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator="native"
+    )
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
     private int id;
     private String websiteName;
     private String eventName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
-    private Date eventDate;
+    private Date eventStartDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
+    private Date eventEndDate;
     private String location;
 
     public int getId() {
@@ -42,12 +51,20 @@ public class Events {
         this.eventName = eventName;
     }
 
-    public Date getEventDate() {
-        return eventDate;
+    public Date getEventStartDate() {
+        return eventStartDate;
     }
 
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
+    public void setEventStartDate(Date eventStartDate) {
+        this.eventStartDate = eventStartDate;
+    }
+
+    public Date getEventEndDate() {
+        return eventEndDate;
+    }
+
+    public void setEventEndDate(Date eventEndDate) {
+        this.eventEndDate = eventEndDate;
     }
 
     public String getLocation() {
