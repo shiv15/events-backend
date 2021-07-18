@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+//todo: env variable needed
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("")
 public class EventController {
     @Autowired
@@ -36,7 +38,7 @@ public class EventController {
 
     @PostMapping ("/scrapeEvents")
 
-    // todo model to accept the urls
+
     public List<Events> scrapeEvents(@RequestBody Urls urls) {
         List<Events> eventList= service.scrapingEvents(urls.getUrls());
             dao.saveEventList(eventList);

@@ -2,8 +2,10 @@ package com.scrapingevents.Scraping.dao;
 
 
 import com.scrapingevents.Scraping.model.Events;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +24,9 @@ public class EventsDao {
     public void saveEvent(Events event) {
 
         Session session = factory.openSession();
-
-        session.save(event);
+        List<Events> response = session.createCriteria(Events.class).add(Restrictions.eq("eventName", event.getEventName())).list();
+        if(response.isEmpty())
+            session.save(event);
         session.close();
     }
 
@@ -31,7 +34,9 @@ public class EventsDao {
         Session session = factory.openSession();
 
         for(int i=0;i<event.size();i++){
-            session.save(event.get(i));
+            List<Events> response = session.createCriteria(Events.class).add(Restrictions.eq("eventName", event.get(i).getEventName())).list();
+            if(response.isEmpty())
+                session.save(event.get(i));
             if(i%20==0) {
                 session.clear();
             }
