@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 GSP_CREDENTIALS.json
+start.sh
 
 ### STS ###
 .apt_generated
