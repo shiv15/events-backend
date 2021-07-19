@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 @Repository
 @Transactional
 public class EventsDao {
@@ -45,15 +46,12 @@ public class EventsDao {
     }
 
 
-    @SuppressWarnings("deprecation")
     public List<Events> getEvents() {
         Session session = factory.openSession();
         List<Events> response = session.createCriteria(Events.class).list();
         session.close();
         return response;
     }
-
-
 
 
 }

@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -jar ./target/Scraping-events-0.0.1-SNAPSHOT.jar --port $PORT
