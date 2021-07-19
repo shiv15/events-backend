@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 //todo: env variable needed
-@CrossOrigin(origins = "http://localhost:4200, https://scraping-events.web.app")
+@CrossOrigin(origins = {"http://localhost:4200, https://scraping-events.web.app"})
 @RequestMapping("")
 public class EventController {
     @Autowired
