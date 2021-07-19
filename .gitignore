@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+GSP_CREDENTIALS.json
+
 ### STS ###
 .apt_generated
 .classpath
