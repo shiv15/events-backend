@@ -30,7 +30,7 @@ public class DBConfig {
 
     @Bean
     public DataSource getDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(url, username , password);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource(url);
         dataSource.setDriverClassName(driverClass);
         return dataSource;
     }
