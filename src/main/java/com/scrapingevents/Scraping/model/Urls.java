@@ -1,7 +1,9 @@
 package com.scrapingevents.Scraping.model;
 
-import javax.persistence.Entity;
 
+/**
+ * The model for the JSON body to get the urls for parsing the data.
+ */
 
 public class Urls {
     private String[] urls;

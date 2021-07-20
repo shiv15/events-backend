@@ -11,7 +11,6 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import javax.sql.DataSource;
-import java.sql.DriverManager;
 import java.util.Properties;
 
 @PropertySource(value = {"classpath:application.properties"})

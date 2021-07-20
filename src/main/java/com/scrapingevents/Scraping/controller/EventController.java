@@ -7,15 +7,13 @@ import com.scrapingevents.Scraping.model.Events;
 import com.scrapingevents.Scraping.model.Urls;
 import com.scrapingevents.Scraping.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+@PropertySource(value = {"classpath:application.properties"})
 @RestController
-//todo: env variable needed
 @CrossOrigin(origins = {"http://localhost:4200", "https://scraping-events.web.app"})
 @RequestMapping("")
 public class EventController {

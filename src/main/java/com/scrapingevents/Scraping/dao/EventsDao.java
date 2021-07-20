@@ -2,15 +2,13 @@ package com.scrapingevents.Scraping.dao;
 
 
 import com.scrapingevents.Scraping.model.Events;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Entity;
-import javax.persistence.PersistenceContext;
+
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -22,6 +20,9 @@ public class EventsDao {
     @Autowired
     private SessionFactory factory;
 
+    /**
+     * Save a single event to the database
+     */
     public void saveEvent(Events event) {
 
         Session session = factory.openSession();
@@ -30,6 +31,11 @@ public class EventsDao {
             session.save(event);
         session.close();
     }
+
+    /**
+     * Save a list of events to the database.
+     * @param event
+     */
 
     public void saveEventList(List<Events> event) {
         Session session = factory.openSession();
@@ -44,6 +50,12 @@ public class EventsDao {
         }
         session.close();
     }
+
+    /**
+     * Get all the records from the database table.
+     *
+     * @return a list of Events.
+     */
 
 
     public List<Events> getEvents() {
