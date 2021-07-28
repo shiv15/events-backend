@@ -2,15 +2,19 @@ package com.scrapingevents.Scraping.dao;
 
 
 import com.scrapingevents.Scraping.model.Events;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import com.scrapingevents.Scraping.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @SuppressWarnings("deprecation")
 @Repository
@@ -18,37 +22,50 @@ import java.util.List;
 public class EventsDao {
 
     @Autowired
-    private SessionFactory factory;
+    private EventsDaoInterface eventsDaoInterface;
+    private EventService service;
 
     /**
      * Save a single event to the database
-     */
-    public void saveEvent(Events event) {
+//     */
 
-        Session session = factory.openSession();
-        List<Events> response = session.createCriteria(Events.class).add(Restrictions.eq("eventName", event.getEventName())).list();
-        if(response.isEmpty())
-            session.save(event);
-        session.close();
+    //todo check for a range of dates
+    public String saveEvent(Events event) {
+        List<Events> response = eventsDaoInterface.findByEventName(event.getEventName());
+        if(response.isEmpty()) {
+            return "saved successfully.";
+        }
+        return "record exists.";
     }
 
     /**
      * Save a list of events to the database.
-     * @param event
+     * @param events
      */
 
-    public void saveEventList(List<Events> event) {
-        Session session = factory.openSession();
+    public String saveEventList(List<Events> events) {
+        Date startDateRange = events.get(0).getEventStartDate();
+        Date EndDateRange = events.get(events.size()-1).getEventStartDate();    //todo replace the logic with iterator - better practice
+        List<Events> responseEvents = eventsDaoInterface.findAllByEventStartDateGreaterThanEqualAndEventStartDateLessThanEqual(startDateRange, EndDateRange);
 
-        for(int i=0;i<event.size();i++){
-            List<Events> response = session.createCriteria(Events.class).add(Restrictions.eq("eventName", event.get(i).getEventName())).list();
-            if(response.isEmpty())
-                session.save(event.get(i));
-            if(i%20==0) {
-                session.clear();
+        //todo move to a different method
+        List<Events> uniqueEvents = new ArrayList<>();
+
+        for(Events responseEvent : responseEvents) {
+            Iterator<Events> eventIterator = events.iterator();
+            while (eventIterator.hasNext()){
+
+                Events events1 = eventIterator.next();
+                //todo add date check for the event. the date types are different
+                if (events1.getEventName().equals(responseEvent.getEventName()) && events1.getLocation().equals(responseEvent.getLocation())){
+                    eventIterator.remove();      //Mutation
+                }
             }
+
         }
-        session.close();
+        if(events.isEmpty()) return "No unique events";
+        eventsDaoInterface.saveAll(events);
+        return "Saved successfully";
     }
 
     /**
@@ -58,12 +75,22 @@ public class EventsDao {
      */
 
 
-    public List<Events> getEvents() {
-        Session session = factory.openSession();
-        List<Events> response = session.createCriteria(Events.class).list();
-        session.close();
-        return response;
+    public List<Events> getAllEvents() {
+        Iterable<Events> response = eventsDaoInterface.findAll();
+        return StreamSupport
+                .stream(response.spliterator(), false)
+                .collect(Collectors.toList());
+    }
+//TODO create exception or null value handling
+    public List<Events> getEvents(int pageNo, int pageSize, String eventStartDate, String eventEndDate, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Events> pagedResult = eventsDaoInterface.findAllByEventStartDateGreaterThanEqualAndEventStartDateLessThanEqual(new Date(eventStartDate), new Date(eventEndDate), paging);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<Events>();
+        }
     }
 
-
 }
+

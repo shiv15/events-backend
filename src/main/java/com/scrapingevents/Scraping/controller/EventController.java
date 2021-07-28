@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @PropertySource(value = {"classpath:application.properties"})
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200", "https://scraping-events.web.app"})
@@ -25,23 +26,29 @@ public class EventController {
 
     @PostMapping("/saveEvent")
     public String save(@RequestBody Events event) {
-        dao.saveEvent(event);
-        return "saved successfully";
+        return dao.saveEvent(event);
     }
 
     @GetMapping("/getAllEvents")
     public List<Events> getAllEvents() {
-        return dao.getEvents();
+        return dao.getAllEvents();
     }
 
+
+    @GetMapping("/getEvents")
+    public List<Events> getEvents(@RequestParam(defaultValue = "0") Integer pageNo,
+                                  @RequestParam(defaultValue = "10") Integer pageSize,
+                                  @RequestParam(defaultValue = "empty") String eventStartDate,
+                                  @RequestParam(defaultValue = "empty") String eventEndDate,
+                                  @RequestParam(defaultValue = "empty") String sortBy) {
+        return dao.getEvents(pageNo, pageSize, eventStartDate, eventEndDate, sortBy);
+    }
+
+
     @PostMapping ("/scrapeEvents")
-
-
-    public List<Events> scrapeEvents(@RequestBody Urls urls) {
+    public String scrapeEvents(@RequestBody Urls urls) {
         List<Events> eventList= service.scrapingEvents(urls.getUrls());
-            dao.saveEventList(eventList);
-
-        return eventList;
+        return dao.saveEventList(eventList);
     }
 
 

@@ -8,10 +8,7 @@ import org.jsoup.select.Elements;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class TMHelper {
 
@@ -68,8 +65,9 @@ public class TMHelper {
 
         event.setEventName(row.select("div:nth-child(2)").text());
         event.setEventStartDate(getDateTM(startDate));
-
-        event.setEventEndDate(getEndDateTM(startDate, endDate));
+        Date endDateOpt = getEndDateTM(startDate, endDate);
+        if(Objects.isNull(endDateOpt)) event.setEventEndDate(getDateTM(startDate));
+        else event.setEventEndDate(getEndDateTM(startDate, endDate));
         event.setLocation(row.select("div:nth-child(3)").text());
         event.setWebsiteName(common.getWebsiteName(websiteName));
         System.out.println(event);

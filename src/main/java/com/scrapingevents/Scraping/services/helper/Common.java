@@ -1,9 +1,12 @@
 package com.scrapingevents.Scraping.services.helper;
 
+import com.scrapingevents.Scraping.model.Events;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,5 +27,9 @@ public class Common {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public List<Events> getUniqueRecords(List<Events> toSave,List<Events> fromDB){
+        return new ArrayList<>();
     }
 }
