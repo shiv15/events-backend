@@ -40,7 +40,10 @@ public class EventController {
                                   @RequestParam(defaultValue = "10") Integer pageSize,
                                   @RequestParam(defaultValue = "empty") String eventStartDate,
                                   @RequestParam(defaultValue = "empty") String eventEndDate,
-                                  @RequestParam(defaultValue = "empty") String sortBy) {
+                                  @RequestParam(defaultValue = "eventName") String sortBy) {
+        if(eventStartDate.equals("empty")){
+            return dao.getEvents(pageNo, pageSize, sortBy);
+        }
         return dao.getEvents(pageNo, pageSize, eventStartDate, eventEndDate, sortBy);
     }
 
