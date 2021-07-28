@@ -1,5 +1,6 @@
 package com.scrapingevents.Scraping.services;
 
+import com.scrapingevents.Scraping.dao.EventsDaoInterface;
 import com.scrapingevents.Scraping.model.Events;
 import com.scrapingevents.Scraping.services.helper.CWHelper;
 import com.scrapingevents.Scraping.services.helper.Common;
@@ -8,7 +9,6 @@ import com.scrapingevents.Scraping.services.helper.TMHelper;
 import java.text.ParseException;
 import java.util.*;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@Repository
 @Service
 public class EventService {
+    private EventsDaoInterface daoInterface;
 
     private CWHelper cwhelper = new CWHelper();
     private TMHelper tmHelper = new TMHelper();
@@ -49,9 +49,10 @@ public class EventService {
                 .peek(it -> System.out.println(Thread.currentThread().getName() + ": " + it))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
+        eventList.sort(Comparator.comparing(Events::getEventStartDate));
         return eventList;
 
     }
+
 
 }

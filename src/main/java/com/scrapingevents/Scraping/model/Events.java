@@ -20,6 +20,7 @@ public class Events {
     )
     private int id;
     private String websiteName;
+    @Column(name="event_name")
     private String eventName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
     private Date eventStartDate;
