@@ -29,10 +29,10 @@ public class EventsDao {
      * Save a single event to the database
 //     */
 
-    //todo check for a range of dates
     public String saveEvent(Events event) {
-        List<Events> response = eventsDaoInterface.findByEventName(event.getEventName());
+        List<Events> response = eventsDaoInterface.findByEventNameAndEventStartDateAndLocation(event.getEventName(), event.getEventStartDate(), event.getLocation());
         if(response.isEmpty()) {
+            eventsDaoInterface.save(event);
             return "saved successfully.";
         }
         return "record exists.";
@@ -81,13 +81,28 @@ public class EventsDao {
                 .stream(response.spliterator(), false)
                 .collect(Collectors.toList());
     }
-//TODO create exception or null value handling
+
     public List<Events> getEvents(int pageNo, int pageSize, String eventStartDate, String eventEndDate, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Events> pagedResult = eventsDaoInterface.findAllByEventStartDateGreaterThanEqualAndEventStartDateLessThanEqual(new Date(eventStartDate), new Date(eventEndDate), paging);
         if(pagedResult.hasContent()) {
             return pagedResult.getContent();
         } else {
+            return new ArrayList<Events>();
+        }
+    }
+
+    public List<Events> getEvents(int pageNo, int pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        try {
+            Page<Events> pagedResult = eventsDaoInterface.findAll(paging);
+            if(pagedResult.hasContent()) {
+                return pagedResult.getContent();
+            } else {
+                return new ArrayList<Events>();
+            }
+        } catch (Exception e){
+            System.out.println("Something went wrong.");
             return new ArrayList<Events>();
         }
     }

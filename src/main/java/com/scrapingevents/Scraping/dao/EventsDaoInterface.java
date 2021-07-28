@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface EventsDaoInterface extends PagingAndSortingRepository<Events, Integer> {
     Page<Events> findAll(Pageable pageable);
-    List<Events> findByEventName(String eventName);
+    List<Events> findByEventNameAndEventStartDateAndLocation(String eventName, Date eventStartDate, String location);
     List<Events> findAllByEventStartDateGreaterThanEqualAndEventStartDateLessThanEqual(Date startDate1, Date startDate2);
     Page<Events> findAllByEventStartDateGreaterThanEqualAndEventStartDateLessThanEqual(Date startDate1, Date startDate2, Pageable pageable);
 
